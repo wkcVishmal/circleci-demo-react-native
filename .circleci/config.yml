@@ -33,8 +33,8 @@ workflows:
             - checkout_code
       - rn/android_build:
           build_type: release
-          # requires:
-          #   - analyse_js
+          requires:
+            - analyse_js
       # - rn/android_test:
       #     requires:
       #       - rn/android_build
