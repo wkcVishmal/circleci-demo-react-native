@@ -42,6 +42,7 @@ version: 2.1
 workflows:
   test:
     jobs:
+      - checkout_code
       - android_build:
           requires:
             - checkout_code
