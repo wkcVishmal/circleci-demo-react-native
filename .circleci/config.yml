@@ -10,8 +10,6 @@ jobs:
     executor: rn/linux_js
     steps:
       steps:
-        - attach_workspace:
-          at: .
         - run:
             command: yarn install
             name: yarn install
