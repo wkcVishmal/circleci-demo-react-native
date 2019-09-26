@@ -25,6 +25,9 @@ jobs:
     executor: rn/linux_js
     steps:
       - run:
+          command: npm install -g react-native-cli
+          name: react-native cli install
+      - run:
           command: react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/build/intermediates/assets/release/index.android.bundle --assets-dest ./android/app/build/intermediates/res/merged/release
           name: react-native bundle
       - run:
