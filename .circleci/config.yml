@@ -12,7 +12,9 @@ jobs:
       steps:
         - attach_workspace:
           at: .
-        - rn/yarn_install
+        - run:
+            command: yarn install
+            name: yarn install
         - run:
             command: sudo npm install -g react-native-cli
             name: react-native cli install
