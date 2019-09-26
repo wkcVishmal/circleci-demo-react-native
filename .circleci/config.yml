@@ -15,19 +15,18 @@ jobs:
   android_build:
     executor: rn/linux_js
     steps:
-      steps:
-        - run:
-            command: yarn install
-            name: yarn install
-        - run:
-            command: sudo npm install -g react-native-cli
-            name: react-native cli install
-        - run:
-            command: react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/build/intermediates/assets/release/index.android.bundle --assets-dest ./android/app/build/intermediates/res/merged/release
-            name: react-native bundle
-        - run:
-            command: cd android && ./gradlew assembleRelease
-            name: gradlew assembleRelease
+      - run:
+          command: yarn install
+          name: yarn install
+      - run:
+          command: sudo npm install -g react-native-cli
+          name: react-native cli install
+      - run:
+          command: react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/build/intermediates/assets/release/index.android.bundle --assets-dest ./android/app/build/intermediates/res/merged/release
+          name: react-native bundle
+      - run:
+          command: cd android && ./gradlew assembleRelease
+          name: gradlew assembleRelease
 orbs:
   rn: react-native-community/react-native@1.0.0
 version: 2.1
