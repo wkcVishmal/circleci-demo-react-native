@@ -13,7 +13,7 @@ jobs:
           paths: .
           root: .
   android_build:
-    executor: linux_android
+    executor: rn/linux_android
     steps:
       - attach_workspace:
           at: .
