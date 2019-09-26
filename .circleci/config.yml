@@ -21,6 +21,8 @@ jobs:
       - run:
           command: bundle exec fastlane android release
           name: Run Fastlane
+  pre-steps:
+    - run: echo 'export TERM=xterm' >> $BASH_ENV
 orbs:
   rn: react-native-community/react-native@1.0.0
 version: 2.1
