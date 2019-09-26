@@ -39,7 +39,7 @@ jobs:
             echo 'export JAVA_HOME=/Library/Java/Home' >> $BASH_ENV
             source $BASH_ENV
           name: Configure Environment Variables
-       - restore_cache:
+      - restore_cache:
         key: |
           brew-cache-{{ arch }}-{{ .Environment.CACHE_VERSION }}
       - run:
