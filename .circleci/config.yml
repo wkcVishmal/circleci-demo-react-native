@@ -1,45 +1,44 @@
+version: 2
 jobs:
-  analyse_js:
-    executor: rn/linux_js
-    steps:
-      - attach_workspace:
-          at: .
-      - rn/yarn_install
-  checkout_code:
-    executor: rn/linux_js
+  build:
+    working_directory: ~/code
+    docker:
+      - image: circleci/android:api-25-alpha
+    environment:
+      JVM_OPTS: -Xmx4G
     steps:
       - checkout
-      - persist_to_workspace:
-          paths: .
-          root: .
-  fastlane_release:
-    executor: rn/linux_js
-    steps:
-      - attach_workspace:
-          at: .
-      - rn/yarn_install
+      - run: echo "Mirkelam is working for you 👯"
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          command: bundle exec fastlane android release
-          name: Run Fastlane
-  pre-steps:
-    - run: echo 'export TERM=xterm' >> $BASH_ENV
-orbs:
-  rn: react-native-community/react-native@1.0.0
-version: 2.1
-workflows:
-  test:
-    jobs:
-      - checkout_code
-      - analyse_js:
-          requires:
-            - checkout_code
-      - rn/android_build:
-          build_type: release
-          requires:
-            - analyse_js
-      - rn/android_test:
-          requires:
-            - rn/android_build
-      - fastlane_release:
-          requires:
-            - rn/android_test
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Run Tests
+          command: ./gradlew lint test
+      - store_test_results:
+                path: app/build/test-results
+                destination: test-results/
+      - run:
+          name: Initial build
+          command: ./gradlew clean assembleRelease --no-daemon --stacktrace
+      - store_artifacts:
+          path: app/build/outputs/apk/
+          destination: apks/
+      - deploy:
+          name: "Deploy to Fabric 🎉🎉"
+          command: |
+            echo "Branch: ${CIRCLE_BRANCH} , PR: ${CIRCLE_PULL_REQUEST}"
+            if [ "${CIRCLE_BRANCH}" == "develop" -o "${CIRCLE_PULL_REQUEST}" != "" ]; then
+              ./gradlew crashlyticsUploadDistributionDevelopmentRelease --stacktrace --debug --no-daemon
+            fi
+
+            release=$(cut -c-7 <<< "${CIRCLE_BRANCH}")
+            if [ "$release" == "release"]; then
+              ./gradlew crashlyticsUploadDistributionProductionRelease --stacktrace --debug --no-daemon
+            fi
