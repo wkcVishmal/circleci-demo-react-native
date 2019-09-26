@@ -38,10 +38,8 @@ jobs:
             echo 'export QEMU_AUDIO_DRV=none' >> $BASH_ENV
             echo 'export JAVA_HOME=/Library/Java/Home' >> $BASH_ENV
             source $BASH_ENV
+            cd android && ./gradlew assembleRelease
           name: Configure Environment Variables
-      - run:
-          command: cd android && ./gradlew assembleRelease
-          name: gradlew assembleRelease
 orbs:
   rn: react-native-community/react-native@1.0.0
 version: 2.1
