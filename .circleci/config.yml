@@ -21,6 +21,15 @@ jobs:
       - run:
           command: bundle exec fastlane android release
           name: Run Fastlane
+  android_build:
+    executor: rn/linux_js
+    steps:
+      - run:
+          command: react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/build/intermediates/assets/release/index.android.bundle --assets-dest ./android/app/build/intermediates/res/merged/release
+          name: react-native bundle
+      - run:
+          command: cd android && ./gradlew assembleRelease
+          name: gradlew assembleRelease
 orbs:
   rn: react-native-community/react-native@1.0.0
 version: 2.1
@@ -31,8 +40,7 @@ workflows:
       - analyse_js:
           requires:
             - checkout_code
-      - rn/android_build:
-          build_type: release
+      - android_build:
           requires:
             - analyse_js
       # - rn/android_test:
