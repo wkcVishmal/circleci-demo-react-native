@@ -27,7 +27,9 @@ jobs:
       - run:
           command: sudo npm install -g react-native-cli
           name: react-native cli install
-      - rn/yarn_install
+      - run:
+          command: yarn install
+          name: yarn install
       - run:
           command: react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/build/intermediates/assets/release/index.android.bundle --assets-dest ./android/app/build/intermediates/res/merged/release
           name: react-native bundle
